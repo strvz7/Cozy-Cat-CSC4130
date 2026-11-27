@@ -14,6 +14,7 @@ class DesktopOverlayController {
 
     this.x = 540;
     this.y = 400;
+    this.positionInitialized = false;
     this.direction = 1; // 1 = right, -1 = left
     this.walkFrame = 0;
     this.idlePauseTicks = 0;
@@ -24,6 +25,15 @@ class DesktopOverlayController {
     this.petAnimTimer = null;
     this.hintTimeout = null;
     this.petting = false;
+
+    // Drag state
+    this.pointerDown = false;
+    this.isDragging = false;
+    this.suppressNextClick = false;
+    this.dragStartX = 0;
+    this.dragStartY = 0;
+    this.dragOffsetX = 0;
+    this.dragOffsetY = 0;
   }
 
   async init() {
@@ -71,10 +81,17 @@ class DesktopOverlayController {
     this.state = nextState;
     this.audio.setVolumes(nextState.settings.soundEffects, 0);
 
-    if (nextState.overlay.x !== null && nextState.overlay.y !== null) {
-      const maxX = Math.max(0, window.innerWidth - 96);
-      this.x = Math.min(maxX, Math.max(0, nextState.overlay.x));
-      this.y = Math.max(0, window.innerHeight - 96);
+    // Only restore saved position once on startup so periodic decay broadcasts
+    // never overwrite live walking/dragged coordinates.
+    if (!this.positionInitialized) {
+      this.positionInitialized = true;
+      if (nextState.overlay.x !== null && nextState.overlay.y !== null) {
+        const maxX = Math.max(0, window.innerWidth - 96);
+        const maxY = Math.max(0, window.innerHeight - 96);
+        this.x = Math.min(maxX, Math.max(0, nextState.overlay.x));
+        this.y = Math.min(maxY, Math.max(0, nextState.overlay.y));
+        this.positionCat();
+      }
     }
 
     const pill = document.getElementById('menu-roaming-pill');
@@ -88,7 +105,8 @@ class DesktopOverlayController {
   }
 
   updateInteractiveFlag() {
-    const shouldInteract = this.hoverCount > 0 || this.menuOpen || this.quitOpen;
+    const shouldInteract =
+      this.hoverCount > 0 || this.menuOpen || this.quitOpen || this.pointerDown || this.isDragging;
     window.cozyApi.setOverlayInteractive(shouldInteract);
   }
 
@@ -104,10 +122,62 @@ class DesktopOverlayController {
       });
     });
 
+    // Drag cat around anywhere on screen (uses sitting cat sprite as placeholder)
+    this.catEl.addEventListener('mousedown', (e) => {
+      if (e.button !== 0 || this.petting) return;
+      this.pointerDown = true;
+      this.isDragging = false;
+      this.dragStartX = e.clientX;
+      this.dragStartY = e.clientY;
+      this.dragOffsetX = e.clientX - this.x;
+      this.dragOffsetY = e.clientY - this.y;
+      this.updateInteractiveFlag();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!this.pointerDown) return;
+      const dist = Math.hypot(e.clientX - this.dragStartX, e.clientY - this.dragStartY);
+      if (!this.isDragging && dist > 6) {
+        this.isDragging = true;
+        if (this.menuOpen) this.closeMenu();
+        this.dismissHint();
+        this.catEl.classList.add('dragging');
+        this.catEl.classList.remove('facing-left');
+        this.catEl.style.background = "url('../../../assets/cat/sitting.png') 0px 0px / 864px 96px";
+      }
+      if (this.isDragging) {
+        const maxX = Math.max(0, window.innerWidth - 96);
+        const maxY = Math.max(0, window.innerHeight - 96);
+        this.x = Math.min(maxX, Math.max(0, e.clientX - this.dragOffsetX));
+        this.y = Math.min(maxY, Math.max(0, e.clientY - this.dragOffsetY));
+        this.positionCat();
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!this.pointerDown) return;
+      const wasDragging = this.isDragging;
+      this.pointerDown = false;
+      this.isDragging = false;
+      this.catEl.classList.remove('dragging');
+      if (wasDragging) {
+        this.suppressNextClick = true;
+        fetch(`${this.config.baseUrl}/api/overlay/position`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ x: this.x, y: this.y }),
+        }).catch(() => {});
+      }
+      this.updateInteractiveFlag();
+    });
+
     // Left-click cat: scoot away so it never blocks desktop clicks (Report p.6)
     this.catEl.addEventListener('click', (e) => {
       if (e.button !== 0) return;
-      window.cozyApi.focusOverlay();
+      if (this.suppressNextClick) {
+        this.suppressNextClick = false;
+        return;
+      }
       if (this.menuOpen) {
         this.closeMenu();
         return;
@@ -328,7 +398,7 @@ class DesktopOverlayController {
   positionCat() {
     this.catEl.style.left = `${Math.round(this.x)}px`;
     this.catEl.style.top = `${Math.round(this.y)}px`;
-    this.catEl.classList.toggle('facing-left', this.direction < 0);
+    this.catEl.classList.toggle('facing-left', !this.isDragging && this.direction < 0);
     if (!this.hintEl.classList.contains('hidden')) {
       this.positionHintBubble();
     }
@@ -343,7 +413,7 @@ class DesktopOverlayController {
 
   startAnimationLoop() {
     setInterval(() => {
-      if (this.petting) return;
+      if (this.petting || this.isDragging) return;
       const roaming = this.state ? this.state.overlay.roaming : true;
       const maxX = Math.max(16, window.innerWidth - 112);
 

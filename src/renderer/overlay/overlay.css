@@ -30,8 +30,13 @@ html, body {
   width: 96px;
   height: 96px;
   image-rendering: pixelated;
-  cursor: pointer;
+  background-repeat: no-repeat;
+  cursor: grab;
   outline: none;
+}
+
+.overlay-cat.dragging {
+  cursor: grabbing;
 }
 
 .overlay-cat.facing-left {

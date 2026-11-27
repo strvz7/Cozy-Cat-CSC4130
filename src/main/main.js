@@ -21,6 +21,10 @@ let engine = null;
 let backendServer = null;
 let backendInfo = null;
 let isQuitting = false;
+let overlayInteractive = false;
+let overlayRefreshTimer = null;
+let overlayRefreshing = false;
+let lastOverlayRefreshAt = 0;
 
 const ICON_PATH = path.join(__dirname, '..', '..', 'assets', 'figma', 'cat6_sit_0.png');
 
@@ -63,7 +67,15 @@ function showDesktopOverlay() {
     createOverlayWindow();
   }
   const workArea = getOverlayWorkArea();
-  overlayWindow.setBounds(workArea);
+  const cur = overlayWindow.getBounds();
+  if (
+    cur.x !== workArea.x ||
+    cur.y !== workArea.y ||
+    cur.width !== workArea.width ||
+    cur.height !== workArea.height
+  ) {
+    overlayWindow.setBounds(workArea);
+  }
   overlayWindow.setIgnoreMouseEvents(true, { forward: true });
   overlayWindow.showInactive();
   if (mainWindow && !mainWindow.isDestroyed()) {
@@ -122,19 +134,17 @@ function createOverlayWindow() {
     width: workArea.width,
     height: workArea.height,
     frame: false,
-    thickFrame: false,
     transparent: true,
     backgroundColor: '#00000000',
     alwaysOnTop: true,
     skipTaskbar: true,
-    resizable: false,
+    resizable: true,
     movable: false,
     minimizable: false,
     maximizable: false,
     fullscreenable: false,
     hasShadow: false,
     show: false,
-    ...(process.platform === 'win32' ? { type: 'toolbar' } : {}),
     icon: ICON_PATH,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -147,7 +157,51 @@ function createOverlayWindow() {
   overlayWindow.setIgnoreMouseEvents(true, { forward: true });
   overlayWindow.loadFile(path.join(__dirname, '..', 'renderer', 'overlay', 'overlay.html'));
 
+  if (process.platform === 'win32') {
+    const scheduleSurfaceRefresh = () => {
+      if (
+        overlayRefreshing ||
+        overlayInteractive ||
+        !overlayWindow ||
+        overlayWindow.isDestroyed() ||
+        !overlayWindow.isVisible()
+      ) {
+        return;
+      }
+      if (Date.now() - lastOverlayRefreshAt < 800) {
+        return;
+      }
+      clearTimeout(overlayRefreshTimer);
+      overlayRefreshTimer = setTimeout(() => {
+        if (
+          overlayInteractive ||
+          !overlayWindow ||
+          overlayWindow.isDestroyed() ||
+          !overlayWindow.isVisible()
+        ) {
+          return;
+        }
+        overlayRefreshing = true;
+        lastOverlayRefreshAt = Date.now();
+        overlayWindow.hide();
+        overlayWindow.setIgnoreMouseEvents(true, { forward: true });
+        overlayWindow.showInactive();
+        overlayWindow.setAlwaysOnTop(true, 'screen-saver');
+        setTimeout(() => {
+          overlayRefreshing = false;
+        }, 300);
+      }, 120);
+    };
+
+    overlayWindow.on('blur', scheduleSurfaceRefresh);
+    // WM_NCACTIVATE (0x0086): fires when Windows DWM/Snipping Tool recomposites non-client chrome
+    overlayWindow.hookWindowMessage(0x0086, () => {
+      scheduleSurfaceRefresh();
+    });
+  }
+
   overlayWindow.on('closed', () => {
+    clearTimeout(overlayRefreshTimer);
     overlayWindow = null;
   });
 }
@@ -249,8 +303,9 @@ function registerIpc() {
   });
 
   ipcMain.on('cozy:overlay-interactive', (_event, interactive) => {
+    overlayInteractive = Boolean(interactive);
     if (!overlayWindow || overlayWindow.isDestroyed()) return;
-    if (interactive) {
+    if (overlayInteractive) {
       overlayWindow.setIgnoreMouseEvents(false);
     } else {
       overlayWindow.setIgnoreMouseEvents(true, { forward: true });
