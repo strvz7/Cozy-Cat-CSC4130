@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=960, initial-scale=1.0" />
+  <title>Cozy Cat</title>
+  <link rel="stylesheet" href="../../../node_modules/@fontsource/pixelify-sans/400.css" />
+  <link rel="stylesheet" href="../../../node_modules/@fontsource/pixelify-sans/500.css" />
+  <link rel="stylesheet" href="../../../node_modules/@fontsource/pixelify-sans/700.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" class="app-window">
+    <!-- Title Bar -->
+    <header id="title-bar" class="title-bar">
+      <div class="title-text">Cozy Cat</div>
+      <div class="window-controls">
+        <button id="btn-close-app" class="close-chip" title="Close Room">
+          <img src="../../../assets/figma/ic_x.png" alt="Close" />
+        </button>
+      </div>
+    </header>
+    <div class="title-line"></div>
+
+    <!-- Stat Bar -->
+    <section class="stat-bar">
+      <div class="stat-item" title="Hunger: Feed or give fish treats">
+        <img class="stat-icon-fish" src="../../../assets/figma/ic_fish.png" alt="Hunger" />
+        <div class="stat-meta">
+          <div class="stat-label">HUNGER</div>
+          <div class="stat-row">
+            <div class="stat-track">
+              <div id="bar-hunger" class="stat-fill stat-fill-hunger"></div>
+              <div class="stat-ticks"></div>
+            </div>
+            <span id="delta-hunger" class="stat-delta"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-item" title="Energy: Sleep, take a bath, or wash paws">
+        <div class="zzz-chip">Zzz</div>
+        <div class="stat-meta">
+          <div class="stat-label">ENERGY</div>
+          <div class="stat-row">
+            <div class="stat-track">
+              <div id="bar-energy" class="stat-fill stat-fill-energy"></div>
+              <div class="stat-ticks"></div>
+            </div>
+            <span id="delta-energy" class="stat-delta"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-item" title="Mood: Pet, play with yarn, fish treat, bath, or toilet">
+        <img class="stat-icon-heart" src="../../../assets/figma/ic_heart.png" alt="Mood" />
+        <div class="stat-meta">
+          <div class="stat-label">MOOD</div>
+          <div class="stat-row">
+            <div class="stat-track">
+              <div id="bar-mood" class="stat-fill stat-fill-mood"></div>
+              <div class="stat-ticks"></div>
+            </div>
+            <span id="delta-mood" class="stat-delta"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="stat-line"></div>
+
+    <!-- Left Rail + Main Viewport -->
+    <main class="workspace">
+      <aside id="button-rail" class="button-rail"></aside>
+
+      <section id="stage" class="stage">
+        <!-- Living Room -->
+        <div id="view-living" class="room-view">
+          <div id="living-wall" class="living-wall"></div>
+          <div id="living-floor" class="living-floor"></div>
+
+          <div class="room-window"><img src="../../../assets/figma/i_window.png" alt="" /></div>
+          <img class="prop prop-paint-sun" src="../../../assets/figma/i_paint_sun.png" alt="" />
+          <img class="prop prop-paint-hill" src="../../../assets/figma/i_paint_hill.png" alt="" />
+          <img class="prop prop-clock" src="../../../assets/figma/i_clock.png" alt="" />
+          <button id="btn-to-bathroom" class="room-arrow room-arrow-right" title="Go to Bathroom">
+            <img src="../../../assets/figma/arrow_right.png" alt="To Bathroom" />
+          </button>
+
+          <img id="living-bookshelf" class="prop prop-bookshelf" src="../../../assets/figma/i_bookshelf.png" alt="" />
+          <img id="living-fireplace" class="prop prop-fireplace" src="../../../assets/figma/i_fire_off.png" alt="" />
+          <img class="prop prop-lamp" src="../../../assets/figma/i_lamp.png" alt="" />
+          <img class="prop prop-console" src="../../../assets/figma/i_console.png" alt="" />
+          <img class="prop prop-tv" src="../../../assets/figma/i_tv_off.png" alt="" />
+          <img class="prop prop-rug" src="../../../assets/figma/i_rug_red.png" alt="" />
+          <img id="living-sofa" class="prop prop-sofa" src="../../../assets/figma/i_sofa.png" alt="" />
+          <img class="prop prop-coffeetable" src="../../../assets/figma/i_coffeetable.png" alt="" />
+          <img class="prop prop-plant" src="../../../assets/figma/i_plant.png" alt="" />
+          <img id="living-bowl" class="prop prop-bowl" src="../../../assets/figma/p4_empty.png" alt="" />
+          <img class="prop prop-bed" src="../../../assets/figma/p4_bed.png" alt="" />
+
+          <!-- Cat Interactive Sprite & Action Animations -->
+          <div id="living-cat" class="cat-sprite" title="Click to Pet Cozy Cat"></div>
+          <img id="living-action-anim" class="action-anim hidden" alt="" />
+        </div>
+
+        <!-- Bathroom -->
+        <div id="view-bathroom" class="room-view bathroom-view hidden">
+          <img class="bath-wall bath-wall-left" src="../../../assets/figma/bath_wall.png" alt="" />
+          <img class="bath-wall bath-wall-right" src="../../../assets/figma/bath_wall.png" alt="" />
+          <button id="btn-to-living" class="room-arrow room-arrow-left" title="Back to Living Room">
+            <img src="../../../assets/figma/arrow_right.png" alt="To Living Room" />
+          </button>
+
+          <img class="prop bath-window" src="../../../assets/figma/i_window.png" alt="" />
+          <img class="prop bath-cabinet" src="../../../assets/figma/bath_cabinet.png" alt="" />
+          <img class="prop bath-mirror" src="../../../assets/figma/bath_mirror.png" alt="" />
+          <img class="prop bath-mirror-tile" src="../../../assets/figma/bath_mirror_tile.png" alt="" />
+          <img class="prop bath-rug-sink" src="../../../assets/figma/bath_rug_sq.png" alt="" />
+          <img class="prop bath-sink" src="../../../assets/figma/bath_sink_large.png" alt="" />
+
+          <img class="prop bath-rolls" src="../../../assets/figma/bath_toilet_rolls.png" alt="" />
+          <img class="prop bath-tp-holder" src="../../../assets/figma/bath_tp_holder.png" alt="" />
+          <img class="prop bath-rug-toilet" src="../../../assets/figma/bath_rug_sq.png" alt="" />
+          <img class="prop bath-toilet" src="../../../assets/figma/bath_toilet_icon.png" alt="" />
+
+          <img class="prop bath-towel-rail" src="../../../assets/figma/bath_towel_rail.png" alt="" />
+          <img class="prop bath-towel-hanging" src="../../../assets/figma/bath_towel_hanging.png" alt="" />
+          <img class="prop bath-shower-head" src="../../../assets/figma/bath_shower_head.png" alt="" />
+          <img class="prop bath-soap" src="../../../assets/figma/bath_soap.png" alt="" />
+          <img class="prop bath-shampoo" src="../../../assets/figma/bath_shampoo.png" alt="" />
+          <img class="prop bath-tub" src="../../../assets/figma/bath_tub_icon.png" alt="" />
+          <img class="prop bath-curtain" src="../../../assets/figma/bath_curtain.png" alt="" />
+          <img class="prop bath-curtain-rod" src="../../../assets/figma/bath_curtain_rod.png" alt="" />
+          <img class="prop bath-rug-tub" src="../../../assets/figma/bath_rug_wide.png" alt="" />
+          <img class="prop bath-plant" src="../../../assets/figma/i_plant.png" alt="" />
+
+          <div id="bath-cat" class="cat-sprite cat-sprite-bath" title="Click to Pet Cozy Cat"></div>
+          <img id="bath-action-anim" class="action-anim hidden" alt="" />
+        </div>
+
+        <!-- Build Mode -->
+        <div id="view-build" class="build-view hidden">
+          <div class="build-toolbar">
+            <div class="build-title">Build mode</div>
+            <div class="build-tabs">
+              <button class="pixel-btn build-tab active" data-tab="furniture">Furniture</button>
+              <button class="pixel-btn build-tab" data-tab="walls">Walls</button>
+              <button class="pixel-btn build-tab" data-tab="floors">Floors</button>
+            </div>
+            <button id="btn-build-done" class="pixel-btn pixel-btn-amber">Done</button>
+          </div>
+
+          <div class="build-content">
+            <div class="build-left">
+              <div class="preview-frame">
+                <div id="build-preview-room" class="build-preview-room"></div>
+              </div>
+              <div class="preview-caption" id="build-preview-caption">Furniture Selected</div>
+              <div class="preview-summary" id="build-preview-summary">Original furnitures</div>
+            </div>
+            <div class="material-picker" id="material-picker"></div>
+          </div>
+        </div>
+
+        <!-- Tooltip Floating Box (Heuristic #5) -->
+        <div id="rail-tooltip" class="rail-tooltip hidden">
+          <div id="rail-tooltip-title" class="rail-tooltip-title"></div>
+          <div id="rail-tooltip-desc" class="rail-tooltip-desc"></div>
+        </div>
+
+        <!-- Full-bar / System Status Message (Heuristic #4) -->
+        <div id="status-banner" class="status-banner hidden">
+          <span id="status-banner-text"></span>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal-scrim hidden">
+          <div class="settings-dialog">
+            <div class="dialog-title">Settings</div>
+            <div class="dialog-body">
+              <div class="section-heading">SOUND</div>
+
+              <div class="setting-row">
+                <div class="setting-copy">
+                  <div class="setting-name">Sound effects</div>
+                </div>
+                <div class="slider-wrap">
+                  <input id="slider-sfx" type="range" min="0" max="100" value="50" class="pixel-slider" />
+                  <span id="val-sfx" class="slider-val">50%</span>
+                </div>
+              </div>
+
+              <div class="setting-row setting-divider">
+                <div class="setting-copy">
+                  <div class="setting-name">Background music</div>
+                  <div class="setting-desc">Soft tunes while the room is open.</div>
+                </div>
+                <div class="slider-wrap">
+                  <input id="slider-bgm" type="range" min="0" max="100" value="50" class="pixel-slider" />
+                  <span id="val-bgm" class="slider-val">50%</span>
+                </div>
+              </div>
+
+              <div class="section-heading">DESKTOP COMPANION</div>
+
+              <div class="setting-row setting-divider">
+                <div class="setting-copy">
+                  <div class="setting-name">Show cat on desktop</div>
+                  <div class="setting-desc">If toggle ticks “On”, closing this window keeps your cat visible on the desktop.</div>
+                </div>
+                <div class="desktop-toggle-group">
+                  <button id="btn-send-desktop-now" class="pixel-btn pixel-btn-sm">Send cat to desktop now</button>
+                  <button id="toggle-desktop" class="toggle-chip on">✓ ON</button>
+                </div>
+              </div>
+
+              <div class="setting-row setting-divider">
+                <div class="setting-copy">
+                  <div class="setting-name">Automatically Open Cozy Cat when System starts</div>
+                  <div class="setting-desc">Start Cozy Cat when you turn on the laptop.</div>
+                </div>
+                <button id="toggle-startup" class="toggle-chip off">OFF</button>
+              </div>
+
+              <div class="dialog-actions">
+                <button id="btn-settings-undo" class="pixel-btn pixel-btn-cream">↩ UNDO</button>
+                <button id="btn-settings-default" class="pixel-btn pixel-btn-brown">Set to Default</button>
+                <button id="btn-settings-save" class="pixel-btn pixel-btn-amber">Save Settings</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="audio.js"></script>
+  <script src="room.js"></script>
+</body>
+</html>

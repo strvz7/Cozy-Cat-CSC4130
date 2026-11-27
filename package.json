@@ -1,0 +1,26 @@
+{
+  "name": "cozy-cat-app",
+  "version": "1.0.0",
+  "description": "Cozy Cat desktop virtual pet application with room care, bathroom, build mode, settings, system tray, and Windows desktop overlay.",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "backend": "node src/backend/standalone.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": [
+    "virtual-pet",
+    "desktop-pet",
+    "electron",
+    "cozy-cat"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@fontsource/pixelify-sans": "^5.2.5",
+    "express": "^4.21.2",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "electron": "^35.0.0"
+  }
+}

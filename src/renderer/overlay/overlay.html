@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cozy Cat Overlay</title>
+  <link rel="stylesheet" href="../../../node_modules/@fontsource/pixelify-sans/400.css" />
+  <link rel="stylesheet" href="../../../node_modules/@fontsource/pixelify-sans/500.css" />
+  <link rel="stylesheet" href="../../../node_modules/@fontsource/pixelify-sans/700.css" />
+  <link rel="stylesheet" href="overlay.css" />
+</head>
+<body>
+  <div id="overlay-root" class="overlay-root">
+    <!-- Onboarding / Hint Bubble -->
+    <div id="hint-bubble" class="hint-bubble interactive hidden">
+      <div class="hint-text">
+        Left Click to Move me<br />
+        Right Click / Press 'Tab' on Keyboard to Open Menu
+      </div>
+      <div class="hint-tail"></div>
+    </div>
+
+    <!-- Floating Overlaid Cat -->
+    <div id="overlay-cat" class="overlay-cat interactive" tabindex="0" title="Left-click to move • Right-click or Tab for menu"></div>
+    <img id="overlay-pet-anim" class="overlay-pet-anim hidden" alt="" />
+
+    <!-- Right-Click / Tab Context Menu -->
+    <div id="cat-menu" class="cat-menu interactive hidden" role="menu">
+      <div class="menu-heading">Cozy Cat</div>
+      <button class="menu-item active" data-action="open-room">
+        <span>Open room</span>
+        <span class="menu-shortcut">↵</span>
+      </button>
+      <button class="menu-item" data-action="pet-cat">
+        <span>Pet cat</span>
+      </button>
+      <button class="menu-item" data-action="toggle-roaming">
+        <span>Toggle Roaming</span>
+        <span id="menu-roaming-pill" class="roaming-pill">Pause</span>
+      </button>
+      <div class="menu-separator"></div>
+      <button class="menu-item menu-item-quit" data-action="quit-prompt">
+        <span>Quit Cozy Cat</span>
+      </button>
+    </div>
+
+    <!-- Quit Confirmation Dialog -->
+    <div id="quit-dialog" class="quit-dialog interactive hidden">
+      <div class="quit-title-bar"></div>
+      <div class="quit-body">
+        <div class="quit-message">ARE YOU SURE YOU WANT QUIT COZY CAT?</div>
+        <div class="quit-actions">
+          <button id="btn-quit-cancel" class="quit-btn">CANCEL</button>
+          <button id="btn-quit-confirm" class="quit-btn">QUIT</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../room/audio.js"></script>
+  <script src="overlay.js"></script>
+</body>
+</html>

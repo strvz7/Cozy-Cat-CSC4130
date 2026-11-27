@@ -1,0 +1,198 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  font-family: 'Pixelify Sans', monospace;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.overlay-root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  overflow: hidden;
+}
+
+.overlay-cat {
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  image-rendering: pixelated;
+  cursor: pointer;
+  outline: none;
+}
+
+.overlay-cat.facing-left {
+  transform: scaleX(-1);
+}
+
+.overlay-pet-anim {
+  position: absolute;
+  width: 108px;
+  height: 112px;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* Speech Hint Bubble */
+.hint-bubble {
+  position: absolute;
+  max-width: 240px;
+  background: #f1e2c4;
+  border: 3px solid #2c2118;
+  padding: 8px 10px;
+  color: #2c2118;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  box-shadow: 3px 3px 0 rgba(44, 33, 24, 0.28);
+  cursor: pointer;
+}
+
+.hint-tail {
+  position: absolute;
+  bottom: -10px;
+  left: 36px;
+  width: 12px;
+  height: 10px;
+  background: #f1e2c4;
+  border-right: 3px solid #2c2118;
+  border-bottom: 3px solid #2c2118;
+  transform: rotate(35deg);
+}
+
+/* Context Menu (matched to Figma 274:2512) */
+.cat-menu {
+  position: absolute;
+  width: 256px;
+  background: #f1e2c4;
+  border: 3px solid #2c2118;
+  padding: 6px;
+  box-shadow: 4px 4px 0 rgba(44, 33, 24, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-heading {
+  height: 36px;
+  background: #442a15;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.menu-item {
+  height: 36px;
+  width: 100%;
+  background: #f1e2c4;
+  border: none;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Pixelify Sans', monospace;
+  font-size: 17px;
+  font-weight: 500;
+  color: #2c2118;
+  cursor: pointer;
+  text-align: left;
+}
+
+.menu-item.active,
+.menu-item:hover {
+  background: #d9a25b;
+  font-weight: 700;
+}
+
+.menu-item-quit.active,
+.menu-item-quit:hover {
+  background: #d9826c;
+}
+
+.roaming-pill {
+  width: 92px;
+  height: 26px;
+  background: #3b2a1c;
+  border: 3px solid #2c2118;
+  color: #c9b18b;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-separator {
+  height: 2px;
+  background: #8d6842;
+  margin: 2px 0;
+}
+
+/* Quit Confirmation Modal (matched to Figma 523:1534) */
+.quit-dialog {
+  position: absolute;
+  width: 312px;
+  background: rgba(106, 69, 40, 0.96);
+  border: 3px solid #2c2118;
+  box-shadow: 4px 4px 0 rgba(44, 33, 24, 0.35);
+}
+
+.quit-title-bar {
+  height: 24px;
+  background: #522504;
+  border-bottom: 2px solid #2c2118;
+}
+
+.quit-body {
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.quit-message {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.quit-actions {
+  display: flex;
+  gap: 18px;
+}
+
+.quit-btn {
+  width: 104px;
+  height: 40px;
+  background: #ac7f5e;
+  border: 3px solid #2c2118;
+  color: #f1e2c4;
+  font-family: 'Pixelify Sans', monospace;
+  font-weight: 700;
+  font-size: 19px;
+  cursor: pointer;
+  box-shadow: inset 2px 2px 0 rgba(241, 226, 196, 0.25);
+}
+
+.quit-btn:hover {
+  background: #d9a25b;
+  color: #2c2118;
+}

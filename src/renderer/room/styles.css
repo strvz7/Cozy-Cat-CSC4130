@@ -1,0 +1,880 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+html, body {
+  width: 960px;
+  height: 640px;
+  overflow: hidden;
+  background: #2c2118;
+  font-family: 'Pixelify Sans', monospace;
+  color: #f1e2c4;
+}
+
+img {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.app-window {
+  position: relative;
+  width: 960px;
+  height: 640px;
+  border: 4px solid #2c2118;
+  background: #2c2118;
+  overflow: hidden;
+}
+
+/* Title Bar */
+.title-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 952px;
+  height: 32px;
+  background: #5a3b22;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 0 10px;
+  cursor: grab;
+}
+
+.title-bar:active {
+  cursor: grabbing;
+}
+
+.title-text {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+  color: #f1e2c4;
+  pointer-events: none;
+}
+
+.close-chip {
+  width: 36px;
+  height: 26px;
+  background: #f1e2c4;
+  border: 3px solid #2c2118;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.close-chip img {
+  width: 22px;
+  height: 22px;
+}
+
+.close-chip:hover:not(:disabled) {
+  background: #ffdcb0;
+}
+
+.close-chip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.title-line {
+  position: absolute;
+  left: 0;
+  top: 30px;
+  width: 952px;
+  height: 4px;
+  background: #2c2118;
+}
+
+/* Stat Bar */
+.stat-bar {
+  position: absolute;
+  left: 0;
+  top: 34px;
+  width: 952px;
+  height: 58px;
+  background: #6a4528;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 10px;
+}
+
+.stat-item {
+  width: 300px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stat-icon-fish {
+  width: 48px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.stat-icon-heart {
+  width: 28px;
+  height: 28px;
+  margin: 0 10px;
+  object-fit: contain;
+}
+
+.zzz-chip {
+  width: 48px;
+  height: 28px;
+  background: #3b2a1c;
+  border: 3px solid #2c2118;
+  color: #9fab91;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  font-weight: 700;
+  font-size: 13px;
+  color: #f1e2c4;
+  line-height: 1;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-track {
+  position: relative;
+  width: 200px;
+  height: 20px;
+  background: #2c2118;
+  padding: 3px;
+}
+
+.stat-fill {
+  height: 14px;
+  width: 50%;
+  transition: width 0.25s ease;
+}
+
+.stat-fill-hunger {
+  background: #d9a25b;
+}
+
+.stat-fill-energy {
+  background: #9fab91;
+}
+
+.stat-fill-mood {
+  background: #d4537e;
+}
+
+.stat-ticks {
+  position: absolute;
+  inset: 3px;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0px,
+    transparent 17.5px,
+    #2c2118 17.5px,
+    #2c2118 19.5px
+  );
+}
+
+.stat-delta {
+  min-width: 24px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #f1e2c4;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.stat-delta.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stat-delta.neg {
+  color: #f3a4a4;
+}
+
+.stat-delta.pos {
+  color: #bde6a8;
+}
+
+.stat-line {
+  position: absolute;
+  left: 0;
+  top: 90px;
+  width: 952px;
+  height: 4px;
+  background: #2c2118;
+}
+
+/* Workspace */
+.workspace {
+  position: absolute;
+  left: 0;
+  top: 94px;
+  width: 952px;
+  height: 538px;
+  display: flex;
+}
+
+.button-rail {
+  width: 96px;
+  height: 538px;
+  background: #6a4528;
+  border-right: 4px solid #2c2118;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rail-btn {
+  position: relative;
+  width: 72px;
+  height: 70px;
+  background: #8f6a45;
+  border: 3px solid #2c2118;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rail-btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: #b08a5e;
+}
+
+.rail-btn::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  background: #684528;
+}
+
+.rail-btn:hover:not(:disabled) {
+  background: #a07951;
+}
+
+.rail-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.rail-btn.active {
+  background: #d9a25b;
+}
+
+.rail-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.rail-btn img {
+  position: relative;
+  z-index: 1;
+  max-width: 52px;
+  max-height: 48px;
+  object-fit: contain;
+}
+
+/* Stage */
+.stage {
+  position: relative;
+  width: 856px;
+  height: 538px;
+  background: #3b2a1c;
+  overflow: hidden;
+}
+
+.room-view {
+  position: relative;
+  width: 856px;
+  height: 538px;
+  overflow: hidden;
+}
+
+/* Living Room Walls & Floors */
+.living-wall {
+  position: absolute;
+  left: 0;
+  top: -70px;
+  width: 960px;
+  height: 320px;
+  background-size: cover;
+  background-position: top left;
+}
+
+.living-wall.wall-warm_brown {
+  background-image: url('../../../assets/figma/w_brown.png');
+}
+
+.living-wall.wall-honey_gold {
+  background-image: url('../../../assets/figma/w_brown.png');
+  filter: sepia(0.35) saturate(1.5) brightness(1.16) hue-rotate(-6deg);
+}
+
+.living-wall.wall-soft_sage {
+  background-image: url('../../../assets/figma/w_brown.png');
+  filter: saturate(0.55) hue-rotate(68deg) brightness(1.06);
+}
+
+.living-wall.wall-plain_cream {
+  background: #8f6b47;
+}
+
+.living-floor {
+  position: absolute;
+  left: 0;
+  top: 250px;
+  width: 1024px;
+  height: 320px;
+  background-size: cover;
+  background-position: top left;
+}
+
+.living-floor.floor-tan_oak {
+  background-image: url('../../../assets/figma/f_tan.png');
+}
+
+.living-floor.floor-dark_oak {
+  background-image: url('../../../assets/figma/f_tan.png');
+  filter: brightness(0.62) contrast(1.12);
+}
+
+.living-floor.floor-plain_sand {
+  background: #b48850;
+}
+
+/* Living Room Props (exact Figma coordinates) */
+.prop {
+  position: absolute;
+  pointer-events: none;
+}
+
+.room-window {
+  position: absolute;
+  left: 30px;
+  top: 52px;
+  width: 192px;
+  height: 112px;
+  overflow: hidden;
+}
+
+.room-window img {
+  width: 192px;
+  height: 248px;
+}
+
+.prop-paint-sun { left: 326px; top: 20px; width: 128px; height: 64px; }
+.prop-paint-hill { left: 500px; top: 20px; width: 128px; height: 64px; }
+.prop-clock { left: 700px; top: 20px; width: 64px; height: 64px; }
+
+.room-arrow {
+  position: absolute;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 15;
+  padding: 0;
+  transition: transform 0.12s;
+}
+
+.room-arrow:hover {
+  transform: scale(1.08);
+}
+
+.room-arrow-right {
+  left: 775px;
+  top: 22px;
+  width: 71px;
+  height: 48px;
+}
+
+.room-arrow-right img {
+  width: 100%;
+  height: 100%;
+}
+
+.room-arrow-left {
+  left: 18px;
+  top: 20px;
+  width: 71px;
+  height: 48px;
+}
+
+.room-arrow-left img {
+  width: 100%;
+  height: 100%;
+  transform: scaleX(-1);
+}
+
+.prop-bookshelf { left: 668px; top: 108px; width: 188px; height: 192px; object-fit: contain; }
+.prop-fireplace { left: 326px; top: 106px; width: 128px; height: 192px; object-fit: contain; }
+.prop-lamp { left: 250px; top: 112px; width: 64px; height: 188px; }
+.prop-console { left: 470px; top: 330px; width: 192px; height: 100px; }
+.prop-tv { left: 494px; top: 258px; width: 144px; height: 80px; }
+.prop-rug { left: 200px; top: 350px; width: 256px; height: 128px; }
+.prop-sofa { left: 30px; top: 310px; width: 192px; height: 128px; object-fit: contain; }
+.prop-coffeetable { left: 240px; top: 385px; width: 128px; height: 64px; }
+.prop-plant { left: 778px; top: 370px; width: 60px; height: 120px; }
+.prop-bowl { left: 388px; top: 406px; width: 64px; height: 64px; }
+.prop-bed { left: 630px; top: 428px; width: 128px; height: 96px; }
+
+/* Cat Sprite (6x scaled 16x16 spritesheet = 96x96) */
+.cat-sprite {
+  position: absolute;
+  left: 446px;
+  top: 374px;
+  width: 96px;
+  height: 96px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.cat-sprite:hover {
+  filter: drop-shadow(0 0 4px rgba(241, 226, 196, 0.5));
+}
+
+.cat-sprite-bath {
+  left: 336px;
+  top: 350px;
+}
+
+.action-anim {
+  position: absolute;
+  z-index: 12;
+  pointer-events: none;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+/* Bathroom Layout (matched to Figma 332:5439) */
+.bathroom-view {
+  background: #c4c6c8;
+}
+
+.bath-wall {
+  position: absolute;
+  top: -31px;
+  width: 561px;
+  height: 296px;
+  object-fit: contain;
+}
+.bath-wall-left { left: -129px; }
+.bath-wall-right { left: 415px; }
+
+.bath-window { left: 314px; top: 31px; width: 178px; height: 80px; object-fit: cover; object-position: top; }
+.bath-cabinet { left: 12px; top: 156px; width: 112px; height: 192px; object-fit: contain; }
+.bath-mirror { left: 146px; top: 132px; width: 128px; height: 90px; object-fit: contain; }
+.bath-mirror-tile { left: 654px; top: 183px; width: 42px; height: 32px; object-fit: contain; }
+.bath-rug-sink { left: 123px; top: 278px; width: 153px; height: 91px; object-fit: contain; }
+.bath-sink { left: 120px; top: 204px; width: 158px; height: 112px; object-fit: contain; }
+
+.bath-rolls { left: 338px; top: 126px; width: 130px; height: 64px; object-fit: contain; }
+.bath-tp-holder { left: 318px; top: 224px; width: 22px; height: 40px; object-fit: contain; }
+.bath-rug-toilet { left: 331px; top: 265px; width: 129px; height: 97px; object-fit: contain; }
+.bath-toilet { left: 338px; top: 176px; width: 114px; height: 126px; object-fit: contain; }
+
+.bath-towel-rail { left: 534px; top: 176px; width: 42px; height: 32px; object-fit: contain; }
+.bath-towel-hanging { left: 540px; top: 184px; width: 32px; height: 74px; object-fit: contain; }
+.bath-shower-head { left: 586px; top: 162px; width: 84px; height: 76px; object-fit: contain; }
+.bath-soap { left: 626px; top: 220px; width: 34px; height: 32px; object-fit: contain; }
+.bath-shampoo { left: 748px; top: 253px; width: 66px; height: 70px; object-fit: contain; }
+.bath-tub { left: 590px; top: 214px; width: 220px; height: 120px; object-fit: contain; }
+.bath-curtain { left: 632px; top: 116px; width: 200px; height: 170px; object-fit: contain; }
+.bath-curtain-rod { left: 624px; top: 108px; width: 216px; height: 28px; object-fit: contain; }
+.bath-rug-tub { left: 590px; top: 330px; width: 216px; height: 94px; object-fit: contain; }
+.bath-plant { left: 778px; top: 406px; width: 60px; height: 120px; }
+
+/* Build Mode */
+.build-view {
+  width: 856px;
+  height: 538px;
+  background: #3b2a1c;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.build-toolbar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.build-title {
+  font-weight: 700;
+  font-size: 24px;
+  color: #f1e2c4;
+}
+
+.build-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.pixel-btn {
+  height: 36px;
+  padding: 0 14px;
+  background: #8d6842;
+  border: 3px solid #2c2118;
+  color: #f1e2c4;
+  font-family: 'Pixelify Sans', monospace;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: inset 2px 2px 0 rgba(241, 226, 196, 0.25);
+}
+
+.pixel-btn:hover {
+  filter: brightness(1.08);
+}
+
+.pixel-btn.active,
+.pixel-btn-amber {
+  background: #d9a25b;
+  color: #2c2118;
+}
+
+.pixel-btn-brown {
+  background: #ac7f5e;
+  color: #f1e2c4;
+}
+
+.pixel-btn-cream {
+  background: #f1e2c4;
+  color: #2c2118;
+}
+
+.pixel-btn-sm {
+  height: 28px;
+  font-size: 12px;
+  padding: 0 10px;
+}
+
+.build-content {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+}
+
+.build-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview-frame {
+  width: 584px;
+  height: 369px;
+  background: #2c2118;
+  padding: 4px;
+}
+
+.build-preview-room {
+  position: relative;
+  width: 576px;
+  height: 361px;
+  overflow: hidden;
+  background: #6a4528;
+}
+
+.build-preview-room .room-view {
+  transform: scale(0.6728);
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+.preview-caption {
+  font-size: 15px;
+  color: #c9b18b;
+}
+
+.preview-summary {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f1e2c4;
+}
+
+.material-picker {
+  width: 230px;
+  height: 446px;
+  background: #6a4528;
+  border: 3px solid #2c2118;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.picker-title {
+  font-weight: 700;
+  font-size: 20px;
+  color: #f1e2c4;
+}
+
+.picker-sub {
+  font-size: 13px;
+  color: #c9b18b;
+  margin-bottom: 10px;
+}
+
+.picker-group-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #d9a25b;
+  margin: 8px 0 6px;
+}
+
+.picker-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.picker-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.swatch-btn {
+  background: #5a3b22;
+  border: 3px solid #2c2118;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: #f1e2c4;
+  font-family: 'Pixelify Sans', monospace;
+  font-size: 12px;
+}
+
+.swatch-btn img {
+  max-width: 100%;
+  height: 44px;
+  object-fit: contain;
+}
+
+.swatch-btn.selected {
+  border-color: #d9a25b;
+  background: #8d6842;
+}
+
+.swatch-color {
+  width: 100%;
+  height: 40px;
+  border: 2px solid #2c2118;
+}
+
+/* Hover Tooltip (Heuristic #5) */
+.rail-tooltip {
+  position: absolute;
+  left: 8px;
+  width: 230px;
+  background: #f1e2c4;
+  border: 3px solid #2c2118;
+  padding: 6px 10px;
+  color: #2c2118;
+  z-index: 30;
+  pointer-events: none;
+  box-shadow: 3px 3px 0 rgba(44, 33, 24, 0.35);
+}
+
+.rail-tooltip-title {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.rail-tooltip-desc {
+  font-size: 13px;
+  color: #442a15;
+}
+
+/* Status Banner (Heuristic #4) */
+.status-banner {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  min-width: 310px;
+  max-width: 440px;
+  padding: 22px 24px;
+  background: rgba(44, 33, 24, 0.86);
+  border: 3px solid #2c2118;
+  color: #ffffff;
+  text-align: center;
+  font-weight: 700;
+  font-size: 20px;
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* Settings Modal */
+.modal-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(44, 33, 24, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.settings-dialog {
+  width: 650px;
+  background: #6a4528;
+  border: 4px solid #2c2118;
+}
+
+.dialog-title {
+  height: 44px;
+  background: #5a3b22;
+  border-bottom: 3px solid #2c2118;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 24px;
+  color: #f1e2c4;
+}
+
+.dialog-body {
+  padding: 14px 22px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-heading {
+  font-weight: 700;
+  font-size: 14px;
+  color: #d9a25b;
+  margin-top: 2px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.setting-divider {
+  border-bottom: 2px solid #8d6842;
+  padding-bottom: 10px;
+}
+
+.setting-name {
+  font-weight: 500;
+  font-size: 17px;
+  color: #f1e2c4;
+}
+
+.setting-desc {
+  font-size: 13px;
+  color: #c9b18b;
+  margin-top: 2px;
+}
+
+.slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pixel-slider {
+  -webkit-appearance: none;
+  width: 192px;
+  height: 10px;
+  background: #3b2a1c;
+  border: 2px solid #2c2118;
+  outline: none;
+  cursor: pointer;
+}
+
+.pixel-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 24px;
+  background: #f1e2c4;
+  border: 3px solid #2c2118;
+  cursor: pointer;
+}
+
+.slider-val {
+  width: 40px;
+  text-align: right;
+  font-size: 13px;
+  color: #f1e2c4;
+}
+
+.desktop-toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggle-chip {
+  width: 68px;
+  height: 30px;
+  border: 3px solid #2c2118;
+  font-family: 'Pixelify Sans', monospace;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.toggle-chip.on {
+  background: #9fab91;
+  color: #2c2118;
+}
+
+.toggle-chip.off {
+  background: #3b2a1c;
+  color: #c9b18b;
+}
+
+.dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
