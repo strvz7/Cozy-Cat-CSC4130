@@ -254,5 +254,10 @@ describe('Assets & File Integrity', () => {
       assert.ok(fs.existsSync(full), `Missing asset: ${rel}`);
       assert.ok(fs.statSync(full).size > 0, `Empty asset: ${rel}`);
     }
+
+    const indexHtml = fs.readFileSync(path.join(root, 'src/renderer/room/index.html'), 'utf8');
+    const roomJs = fs.readFileSync(path.join(root, 'src/renderer/room/room.js'), 'utf8');
+    assert.ok(indexHtml.includes('id="living-sprite-anim"'), 'Dedicated spritesheet container missing');
+    assert.ok(roomJs.includes("getElementById('living-sprite-anim')"), 'play/sleep should render in living-sprite-anim');
   });
 });

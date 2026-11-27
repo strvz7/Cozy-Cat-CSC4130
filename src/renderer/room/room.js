@@ -44,33 +44,39 @@ const ACTION_SPRITES = {
   eat: {
     frames: [0, 1, 2, 3, 4].map((i) => `../../../assets/actions/eat/frame_${i}.png`),
     intervalMs: 320,
-    style: { left: '382px', top: '348px', width: '192px', height: '132px' },
+    style: { left: '382px', top: '348px', width: '192px', height: '125px' },
+    hideIds: ['living-bowl'],
   },
   fish: {
     frames: [0, 1, 2, 3, 4].map((i) => `../../../assets/actions/fish/frame_${i}.png`),
     intervalMs: 320,
     style: { left: '365px', top: '356px', width: '199px', height: '128px' },
+    hideIds: ['living-bowl'],
   },
   pet: {
     frames: [0, 1, 2, 3, 4].map((i) => `../../../assets/actions/pet/frame_${i}.png`),
     intervalMs: 280,
     styleLiving: { left: '442px', top: '364px', width: '108px', height: '112px' },
     styleBath: { left: '332px', top: '340px', width: '108px', height: '112px' },
+    hideIds: [],
   },
   bath: {
     frames: [0, 1, 2, 3, 4, 5].map((i) => `../../../assets/actions/bath/frame_${i}.png`),
     intervalMs: 320,
-    style: { left: '590px', top: '214px', width: '220px', height: '120px' },
+    style: { left: '595px', top: '148px', width: '250px', height: '185px' },
+    hideIds: ['bath-tub', 'bath-curtain', 'bath-towel-rim', 'bath-bottle-amber', 'bath-bottle-blue'],
   },
   toilet: {
     frames: [0, 1, 2, 3, 4, 5, 6].map((i) => `../../../assets/actions/toilet/frame_${i}.png`),
     intervalMs: 280,
-    style: { left: '332px', top: '176px', width: '132px', height: '144px' },
+    style: { left: '300px', top: '162px', width: '196px', height: '201px' },
+    hideIds: ['bath-toilet', 'bath-rug-toilet'],
   },
   wash_hands: {
     frames: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => `../../../assets/actions/wash_hands/frame_${i}.png`),
     intervalMs: 240,
-    style: { left: '120px', top: '204px', width: '164px', height: '146px' },
+    style: { left: '98px', top: '160px', width: '201px', height: '206px' },
+    hideIds: ['bath-sink', 'bath-cabinet', 'bath-rug-sink'],
   },
 };
 
@@ -89,6 +95,8 @@ class RoomController {
     this.deltaTimers = {};
     this.idleFrame = 0;
     this.animTimer = null;
+    this.animEndTimer = null;
+    this.hiddenDuringAnim = [];
     this.idleTimer = null;
   }
 
@@ -298,6 +306,9 @@ class RoomController {
     if (!this.settingsOpen) {
       this.audio.setVolumes(nextState.settings.soundEffects, nextState.settings.backgroundMusic);
     }
+    if (!nextState.activity || !nextState.activity.busy) {
+      this.stopActionAnimation();
+    }
     this.render();
   }
 
@@ -358,60 +369,96 @@ class RoomController {
     bathCat.style.background = bg;
   }
 
-  playActionAnimation(animId, durationMs) {
+  stopActionAnimation() {
     clearInterval(this.animTimer);
-    const room = this.state.room.currentRoom;
+    this.animTimer = null;
+    clearTimeout(this.animEndTimer);
+    this.animEndTimer = null;
+
+    for (const id of this.hiddenDuringAnim) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('hidden');
+    }
+    this.hiddenDuringAnim = [];
+
     const livingAnim = document.getElementById('living-action-anim');
+    const livingSpriteAnim = document.getElementById('living-sprite-anim');
     const bathAnim = document.getElementById('bath-action-anim');
-    const livingCat = document.getElementById('living-cat');
     const livingBowl = document.getElementById('living-bowl');
 
-    livingAnim.classList.add('hidden');
-    bathAnim.classList.add('hidden');
+    if (livingAnim) livingAnim.classList.add('hidden');
+    if (livingSpriteAnim) livingSpriteAnim.classList.add('hidden');
+    if (bathAnim) bathAnim.classList.add('hidden');
+    if (livingBowl) livingBowl.src = '../../../assets/figma/p4_empty.png';
+  }
+
+  hideFixturesForAnimation(ids = []) {
+    this.hiddenDuringAnim = ids;
+    for (const id of ids) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    }
+  }
+
+  playActionAnimation(animId, durationMs) {
+    this.stopActionAnimation();
+    const room = this.state.room.currentRoom;
+    const livingAnim = document.getElementById('living-action-anim');
+    const livingSpriteAnim = document.getElementById('living-sprite-anim');
+    const bathAnim = document.getElementById('bath-action-anim');
 
     const targetImg = room === 'bathroom' ? bathAnim : livingAnim;
 
-    if (animId === 'eat') {
-      livingBowl.src = '../../../assets/figma/p4_food.png';
-    }
-
-    // Spritesheet animations (Play with Yarn, Sleep on Bed)
+    // Spritesheet animations (Play with Yarn at 6x scale = 192x192, Sleep on Bed = 128x96)
     if (animId === 'play') {
       let frame = 0;
-      livingCat.classList.remove('hidden');
-      livingCat.style.left = '440px';
-      livingCat.style.top = '342px';
-      livingCat.style.width = '128px';
-      livingCat.style.height = '128px';
+      livingSpriteAnim.style.left = '416px';
+      livingSpriteAnim.style.top = '300px';
+      livingSpriteAnim.style.width = '192px';
+      livingSpriteAnim.style.height = '192px';
+      livingSpriteAnim.style.backgroundImage = "url('../../../assets/cat/catwithyarn.png')";
+      livingSpriteAnim.style.backgroundSize = '768px 192px';
+      livingSpriteAnim.classList.remove('hidden');
       const step = () => {
-        livingCat.style.background = `url('../../../assets/cat/catwithyarn.png') ${-(frame * 128)}px 0px / 512px 128px`;
+        livingSpriteAnim.style.backgroundPosition = `${-(frame * 192)}px 0px`;
         frame = (frame + 1) % 4;
       };
       step();
       this.animTimer = setInterval(step, 140);
-      setTimeout(() => this.resetCatSpriteGeometry(), durationMs);
+      this.animEndTimer = setTimeout(() => {
+        this.stopActionAnimation();
+        this.updateCatIdleSprites();
+      }, durationMs);
       return;
     }
 
     if (animId === 'sleep') {
       let frame = 0;
-      livingCat.classList.remove('hidden');
-      livingCat.style.left = '630px';
-      livingCat.style.top = '428px';
-      livingCat.style.width = '128px';
-      livingCat.style.height = '96px';
+      this.hideFixturesForAnimation(['living-bed']);
+      livingSpriteAnim.style.left = '630px';
+      livingSpriteAnim.style.top = '428px';
+      livingSpriteAnim.style.width = '128px';
+      livingSpriteAnim.style.height = '96px';
+      livingSpriteAnim.style.backgroundImage = "url('../../../assets/cat/sleeping.png')";
+      livingSpriteAnim.style.backgroundSize = '384px 96px';
+      livingSpriteAnim.classList.remove('hidden');
       const step = () => {
-        livingCat.style.background = `url('../../../assets/cat/sleeping.png') ${-(frame * 128)}px 0px / 384px 96px`;
+        livingSpriteAnim.style.backgroundPosition = `${-(frame * 128)}px 0px`;
         frame = (frame + 1) % 3;
       };
       step();
       this.animTimer = setInterval(step, 350);
-      setTimeout(() => this.resetCatSpriteGeometry(), durationMs);
+      this.animEndTimer = setTimeout(() => {
+        this.stopActionAnimation();
+        this.updateCatIdleSprites();
+      }, durationMs);
       return;
     }
 
     const spec = ACTION_SPRITES[animId];
     if (!spec) return;
+
+    this.hideFixturesForAnimation(spec.hideIds || []);
 
     const style =
       animId === 'pet'
@@ -430,22 +477,10 @@ class RoomController {
     step();
     this.animTimer = setInterval(step, spec.intervalMs);
 
-    setTimeout(() => {
-      clearInterval(this.animTimer);
-      targetImg.classList.add('hidden');
-      livingBowl.src = '../../../assets/figma/p4_empty.png';
+    this.animEndTimer = setTimeout(() => {
+      this.stopActionAnimation();
       this.updateCatIdleSprites();
     }, durationMs);
-  }
-
-  resetCatSpriteGeometry() {
-    clearInterval(this.animTimer);
-    const livingCat = document.getElementById('living-cat');
-    livingCat.style.left = '446px';
-    livingCat.style.top = '374px';
-    livingCat.style.width = '96px';
-    livingCat.style.height = '96px';
-    this.updateCatIdleSprites();
   }
 
   render() {

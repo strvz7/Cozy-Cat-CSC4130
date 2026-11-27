@@ -484,7 +484,15 @@ img {
   object-fit: contain;
 }
 
-/* Bathroom Layout (matched to Figma 332:5439) */
+.sprite-anim {
+  position: absolute;
+  z-index: 12;
+  pointer-events: none;
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
+}
+
+/* Bathroom Layout (exact coordinates & layer order from Figma 332:5439) */
 .bathroom-view {
   background: #c4c6c8;
 }
@@ -500,27 +508,25 @@ img {
 .bath-wall-right { left: 415px; }
 
 .bath-window { left: 314px; top: 31px; width: 178px; height: 80px; object-fit: cover; object-position: top; }
-.bath-cabinet { left: 12px; top: 156px; width: 112px; height: 192px; object-fit: contain; }
-.bath-mirror { left: 146px; top: 132px; width: 128px; height: 90px; object-fit: contain; }
-.bath-mirror-tile { left: 654px; top: 183px; width: 42px; height: 32px; object-fit: contain; }
+.bath-locker { left: -9px; top: 85px; width: 99px; height: 221px; object-fit: contain; }
+.bath-mirror { left: 118px; top: 94px; width: 152px; height: 72px; object-fit: contain; }
 .bath-rug-sink { left: 123px; top: 278px; width: 153px; height: 91px; object-fit: contain; }
-.bath-sink { left: 120px; top: 204px; width: 158px; height: 112px; object-fit: contain; }
+.bath-cabinet { left: 128px; top: 158px; width: 143px; height: 192px; object-fit: contain; }
+.bath-sink { left: 106px; top: 166px; width: 183px; height: 95px; object-fit: contain; }
 
-.bath-rolls { left: 338px; top: 126px; width: 130px; height: 64px; object-fit: contain; }
-.bath-tp-holder { left: 318px; top: 224px; width: 22px; height: 40px; object-fit: contain; }
+.bath-rolls { left: 350px; top: 120px; width: 93px; height: 53px; object-fit: contain; }
+.bath-tp-holder { left: 314px; top: 205px; width: 49px; height: 38px; object-fit: contain; }
 .bath-rug-toilet { left: 331px; top: 265px; width: 129px; height: 97px; object-fit: contain; }
-.bath-toilet { left: 338px; top: 176px; width: 114px; height: 126px; object-fit: contain; }
+.bath-toilet { left: 326px; top: 175px; width: 146px; height: 128px; object-fit: contain; }
 
-.bath-towel-rail { left: 534px; top: 176px; width: 42px; height: 32px; object-fit: contain; }
-.bath-towel-hanging { left: 540px; top: 184px; width: 32px; height: 74px; object-fit: contain; }
-.bath-shower-head { left: 586px; top: 162px; width: 84px; height: 76px; object-fit: contain; }
-.bath-soap { left: 626px; top: 220px; width: 34px; height: 32px; object-fit: contain; }
-.bath-shampoo { left: 748px; top: 253px; width: 66px; height: 70px; object-fit: contain; }
-.bath-tub { left: 590px; top: 214px; width: 220px; height: 120px; object-fit: contain; }
-.bath-curtain { left: 632px; top: 116px; width: 200px; height: 170px; object-fit: contain; }
-.bath-curtain-rod { left: 624px; top: 108px; width: 216px; height: 28px; object-fit: contain; }
-.bath-rug-tub { left: 590px; top: 330px; width: 216px; height: 94px; object-fit: contain; }
-.bath-plant { left: 778px; top: 406px; width: 60px; height: 120px; }
+.bath-towel-wall { left: 500px; top: 117px; width: 164px; height: 136px; object-fit: contain; }
+.bath-bottle-amber { left: 644px; top: 178px; width: 20px; height: 42px; object-fit: contain; }
+.bath-bottle-blue { left: 654px; top: 183px; width: 42px; height: 32px; object-fit: contain; }
+.bath-rug-tub { left: 611px; top: 315px; width: 218px; height: 93px; object-fit: contain; }
+.bath-tub { left: 595px; top: 209px; width: 250px; height: 98px; object-fit: contain; }
+.bath-curtain { left: 611px; top: 63px; width: 287px; height: 206px; object-fit: contain; z-index: 7; }
+.bath-towel-rim { left: 748px; top: 253px; width: 66px; height: 70px; object-fit: contain; z-index: 8; }
+.bath-plant { left: 785px; top: 408px; width: 60px; height: 120px; }
 
 /* Build Mode */
 .build-view {
