@@ -43,6 +43,7 @@ Use the isometric arrow in the top corner of the room to switch between the **Li
 - **First-Time Hint Bubble**: Guides new users (`"Left Click to Move me / Right Click / Press 'Tab' on Keyboard to Open Menu"`).
 - **Desktop Cat Controls**:
   - **Left-click cat**: Moves/scoots the cat away from your cursor so it never blocks desktop clicks.
+  - **Hold left-click drag cat**: Drag the cat to other places on the desktop.
   - **Right-click cat** (or press `Tab` when focused / `Alt+Shift+C` globally): Opens the **Cozy Cat** context menu.
   - **Keyboard Menu Navigation**: `ArrowUp` / `ArrowDown` to highlight, `Enter` to select, `Esc` to close.
   - **Menu Actions**: `Open room`, `Pet cat`, dynamic `Toggle Roaming` (`Pause` / `Continue`), and `Quit Cozy Cat` (with a confirmation dialog).
@@ -63,7 +64,7 @@ Use the isometric arrow in the top corner of the room to switch between the **Li
 ### 1. Clone the repository & install dependencies
 
 ```powershell
-git clone <your-repo-url>
+git clone https://github.com/strvz7/Cozy-Cat-CSC4130.git
 cd "Cozy Cat App"
 npm install
 ```
