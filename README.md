@@ -68,36 +68,47 @@ cd "Cozy Cat App"
 npm install
 ```
 
-### 2. Start the Desktop Application
+### 2. Optional Environment Variables
+
+No `.env` file or API keys are required to run the app locally. You can optionally set:
+
+- `COZY_CAT_DATA_DIR`: Custom directory for persisting `state.json` (defaults to `%APPDATA%\CozyCatApp\state.json` on Windows).
+- `COZY_CAT_PORT`: Port for the standalone backend (`npm run backend`, defaults to `38472`; the Electron app binds to an ephemeral localhost port automatically).
+
+### 3. Start the Desktop Application
 
 ```powershell
 npm start
 ```
 
-This launches the embedded Express/WebSocket backend, opens the `960×640` Cozy Cat Room window, initializes the Windows system tray icon, and prepares the transparent Desktop Overlay window.
+This runs `electron .`, launches the embedded Express/WebSocket backend, opens the `960×640` Cozy Cat Room window, initializes the Windows system tray icon, and prepares the transparent Desktop Overlay window.
 
-### 3. Run the Standalone Backend Only (Optional)
+### 4. Run the Standalone Backend Only (Optional)
 
-If you want to run just the HTTP + WebSocket backend server without launching Electron:
+If you want to run just the HTTP + WebSocket backend server (`node src/backend/standalone.js`) without launching Electron:
 
 ```powershell
 npm run backend
 ```
 
-By default, the standalone server listens on `http://127.0.0.1:38472` (WebSocket at `ws://127.0.0.1:38472/ws`). You can override the port with `COZY_CAT_PORT`:
+By default, the standalone server listens on `http://127.0.0.1:38472` (WebSocket at `ws://127.0.0.1:38472/ws`). To use a custom port:
 
 ```powershell
 $env:COZY_CAT_PORT = "4000"
 npm run backend
 ```
 
-### 4. Run Automated Tests
+### 5. Run Automated Tests
 
 ```powershell
 npm test
 ```
 
-Runs the `node:test` suite in `tests/backend.test.js` covering `StateStore`, `PetEngine`, the Express/WebSocket server, and asset integrity.
+Runs `node --test tests/*.test.js`, covering `StateStore`, `PetEngine`, the Express/WebSocket server, and asset integrity.
+
+### 6. Build / Packaging
+
+No `build` or packaging script is currently configured in `package.json`—the app runs directly via Electron (`npm start`).
 
 ---
 

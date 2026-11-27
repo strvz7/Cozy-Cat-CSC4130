@@ -1,1 +1,19 @@
-node_modules/ 
+# Dependencies
+node_modules/
+
+# Build & packaging outputs
+dist/
+build/
+out/
+release/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Logs & OS files
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
